@@ -5,23 +5,28 @@ x = 2;
 y = 2;
 
 /* [Hidden] */
-top_r = 1;
+top_r = 2;
 bottom_r = 2;
+
 $fn=20;
 
 
 module groove_shape(fn=20) {
     height = grid_height;
     thickness = box_bottom;
-    thickness_offset = thickness * sqrt(2) - thickness;
-    extension = height + thickness * 2;
+    offset = thickness * sqrt(2) - thickness;
+    extension = height * 3;
+    top_size = height;
+    top_side = top_size / 2;
+    top_height = thickness + offset;
     radii_points = [
-            [ height                            , 0                                         , 0],
-            [ extension                         , 0                                         , 0],
-            [ extension                         , -thickness                                , 0],
-            [ height + thickness_offset         , -thickness                                , bottom_r],
-            [ 0                                 , -height - thickness - thickness_offset    , top_r],
-            [ -height - thickness_offset        , -thickness                                , bottom_r],
+            [  height                           , 0                                         , 0],
+            [  extension                        , 0                                         , 0],
+            [  extension                        , -thickness                                , 0],
+            [  height + offset + top_side       , -thickness                                , bottom_r],
+            [  top_side                         , -height - top_height                      , top_r],
+            [ -top_side                         , -height - top_height                      , top_r],
+            [ -height - offset - top_side       , -thickness                                , bottom_r],
             [ -extension                        , -thickness                                , 0],
             [ -extension                        , 0                                         , 0],
             [ -height                           , 0                                         , 0],

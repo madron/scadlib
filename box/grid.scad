@@ -1,8 +1,8 @@
 include <constants.scad>
 use <common.scad>
 
-x = 2;
-y = 2;
+x = 4;
+y = 4;
 
 
 module grid_shape() {
