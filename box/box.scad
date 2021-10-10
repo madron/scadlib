@@ -1,16 +1,13 @@
 include <Round-Anything/polyround.scad>
+include <constants.scad>
 use <grid.scad>
 
 x = 1;
 y = 1;
 
 /* [Hidden] */
-module_size = 50;
-module_height = 40;
-
-bottom = 2;
+bottom = 3;
 side = 2;
-fillet = 6;
 tolerance = 0.1;
 
 $fn=20;

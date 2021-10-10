@@ -1,14 +1,14 @@
+include <constants.scad>
+
 x = 1;
 y = 1;
-
-module_size = 50;
 
 module grid_shape() {
     polygon(
         [
-            [-1,  0],
-            [ 0, -1],
-            [ 1,  0],
+            [-2,  0],
+            [ 0, -2],
+            [ 2,  0],
         ]
     );
 }
