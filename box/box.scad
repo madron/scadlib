@@ -1,21 +1,23 @@
 include <Round-Anything/polyround.scad>
 include <constants.scad>
 use <grid.scad>
+use <groove.scad>
 
-x = 1;
-y = 1;
+x = 2;
+y = 2;
 
 /* [Hidden] */
-bottom = 3;
-side = 2;
-tolerance = 0.1;
+side = 1;
 
 $fn=20;
 
 
 module box(x=1, y=1) {
     difference() {
-        raw_box(x=x * module_size, y=y * module_size, z=module_height, bottom=bottom, side=side, fillet=fillet);
+        union() {
+            raw_box(x=x * module_size, y=y * module_size, z=module_height, bottom=box_bottom, side=side, fillet=fillet);
+            groove(x=x, y=y, fn=$fn);
+        }
         grid(x=x, y=y);
     }
 }
@@ -23,13 +25,13 @@ module box(x=1, y=1) {
 
 
 module raw_box(x, y, z, bottom=1, side=1, fillet=0) {
-    external_x = x - tolerance * 2;
-    external_y = y - tolerance * 2;
+    external_x = x - side_tolerance * 2;
+    external_y = y - side_tolerance * 2;
     external_z = z;
     internal_x =  external_x - side * 2;
     internal_y =  external_y - side * 2;
     internal_z =  external_z;
-    translate([tolerance, 0, 0])
+    translate([side_tolerance, 0, 0])
         difference() {
             cube_fillet(external_x, external_y, external_z, side_radius=fillet + side);
             translate([side, side, bottom])

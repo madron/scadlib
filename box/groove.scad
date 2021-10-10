@@ -1,8 +1,8 @@
 use <Round-Anything/polyround.scad>
 include <constants.scad>
 
-x = 1;
-y = 1;
+x = 2;
+y = 2;
 
 /* [Hidden] */
 top_r = 1;
@@ -40,14 +40,18 @@ module groove_bar_vertical(height=1, fn=20) {
 
 module groove_bar_x(lenght=1, fn=20) {
     rotate(a=[270, 0, 270]) {
-        groove_bar_vertical(height=lenght * module_size, fn=fn);
+        translate([0, 0, side_tolerance]) {
+            groove_bar_vertical(height=lenght * module_size - 2 * side_tolerance, fn=fn);
+        }
     }
 }
 
 
 module groove_bar_y(lenght=1, fn=20) {
     rotate(a=[270, 0, 0]) {
-        groove_bar_vertical(height=lenght * module_size, fn=fn);
+        translate([0, 0, side_tolerance]) {
+            groove_bar_vertical(height=lenght * module_size - 2 * side_tolerance, fn=fn);
+        }
     }
 }
 
