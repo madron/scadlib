@@ -6,9 +6,9 @@ y = 1;
 module grid_shape() {
     polygon(
         [
-            [-2,  0],
-            [ 0, -2],
-            [ 2,  0],
+            [-grid_height,  0],
+            [ 0, -grid_height],
+            [ grid_height,  0],
         ]
     );
 }
