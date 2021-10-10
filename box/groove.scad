@@ -38,32 +38,32 @@ module groove_bar_vertical(height=1, fn=20) {
 }
 
 
-module groove_bar_x(lenght=1) {
+module groove_bar_x(lenght=1, fn=20) {
     rotate(a=[270, 0, 270]) {
-        groove_bar_vertical(height=lenght * module_size);
+        groove_bar_vertical(height=lenght * module_size, fn=fn);
     }
 }
 
 
-module groove_bar_y(lenght=1) {
+module groove_bar_y(lenght=1, fn=20) {
     rotate(a=[270, 0, 0]) {
-        groove_bar_vertical(height=lenght * module_size);
+        groove_bar_vertical(height=lenght * module_size, fn=fn);
     }
 }
 
 
-module groove(x=1, y=1) {
+module groove(x=1, y=1, fn=20) {
     if (x > 1) {
         for (i = [1:x-1]) {
             translate([i * module_size, 0, 0]) {
-                groove_bar_y(y);
+                groove_bar_y(y, fn=fn);
             }
         }
     }
     if (y > 1) {
         for (i = [1:y-1]) {
             translate([0, i * module_size, 0]) {
-                groove_bar_x(x);
+                groove_bar_x(x, fn=fn);
             }
         }
     }
