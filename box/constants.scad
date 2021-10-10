@@ -1,5 +1,4 @@
 module_size = 50;
-module_height = 10;
 fillet = 6;
 grid_height = 2;
 side_tolerance = 0.1;

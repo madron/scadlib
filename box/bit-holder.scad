@@ -34,4 +34,4 @@ module drill_bits(diameters=[3, 4], min=60, max=80) {
 
 drill_bits(diameters=diameters, min=min, max=max);
 
-cube_fillet(x=x * module_size, y=y * module_size, z=module_height, side_radius=fillet);
+cube_fillet(x=x * module_size, y=y * module_size, z=15, side_radius=fillet);

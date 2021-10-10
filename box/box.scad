@@ -1,10 +1,11 @@
-include <Round-Anything/polyround.scad>
 include <constants.scad>
+use <common.scad>
 use <grid.scad>
 use <groove.scad>
 
 x = 2;
 y = 2;
+z = 10;
 
 /* [Hidden] */
 side = 1;
@@ -12,19 +13,16 @@ side = 1;
 $fn=20;
 
 
-module box(x=1, y=1, fn=20) {
+module box(x=1, y=1, z=40, fn=20) {
     difference() {
         union() {
-            raw_box(x=x * module_size, y=y * module_size, z=module_height, bottom=box_bottom, side=side, fillet=fillet);
+            raw_box(x=x * module_size, y=y * module_size, z=z, bottom=box_bottom, side=side, fillet=fillet);
             groove(x=x, y=y, fn=fn);
         }
-        union() {
-            grid(x=x, y=y);
-            grid_edges(x=x, y=y, fn=fn);
-        }
+        grid_bottom_mold(x=x, y=y, fn=fn);
+        grid_top_mold(x=x, y=y, z=z, fn=20);
     }
 }
-
 
 
 module raw_box(x, y, z, bottom=1, side=1, fillet=0) {
@@ -43,24 +41,5 @@ module raw_box(x, y, z, bottom=1, side=1, fillet=0) {
         };
 }
 
-module cube_fillet(x, y, z, side_radius=0, bottom_radius=0, top_radius=0, center=false, fn=30) {
-    if (center) {
-        radii_points = [
-            [-x / 2, -y / 2, side_radius],
-            [ x / 2, -y / 2, side_radius],
-            [ x / 2,  y / 2, side_radius],
-            [-x / 2,  y / 2, side_radius],
-        ];
-        polyRoundExtrude(radii_points, z, r1=top_radius, r2=bottom_radius, fn=fn);
-    } else {
-        radii_points = [
-            [0, 0, side_radius],
-            [0, y, side_radius],
-            [x, y, side_radius],
-            [x, 0, side_radius],
-        ];
-        polyRoundExtrude(radii_points, z, r1=top_radius, r2=bottom_radius, fn=fn);
-    };
-}
 
-box(x=x, y=y, fn=$fn);
+box(x=x, y=y, z=z, fn=$fn);

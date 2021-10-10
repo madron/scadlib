@@ -1,7 +1,8 @@
 include <constants.scad>
+use <common.scad>
 
-x = 1;
-y = 1;
+x = 2;
+y = 2;
 
 
 module grid_shape() {
@@ -41,15 +42,17 @@ module grid_bar_y(lenght=1) {
 }
 
 
-module grid_trim(x=1, y=1) {
-    size = 10;
-    translate([0, 0, -1]) {
+module grid_trim(x=1, y=1, z=grid_height) {
+    x = x * module_size;
+    y = y * module_size;
+    size = grid_height + 1;
+    translate([0, 0, 0]) {
         difference() {
             translate([-size, -size, 0]) {
-                cube([x * module_size + size * 2, y * module_size + size * 2, size]);
+                cube([x + size * 2, y + size * 2, z]);
             }
             translate([0, 0, -1]) {
-                cube([x * module_size, y * module_size, size + 2]);
+                cube([x, y, z + 2]);
             }
         }
     }
@@ -72,8 +75,8 @@ module raw_grid(x=1, y=1) {
 }
 
 
-module grid_edge(fn=20) {
-    rotate_extrude(angle=90, convexity=10, $fn=fn) {
+module grid_corner(fn=20) {
+    rotate_extrude(angle=90, convexity=10, $fn=fn*2) {
         translate([fillet, 0, 0]) {
             rotate(a=[180, 0, 0]) {
                 edge_shape();
@@ -83,22 +86,66 @@ module grid_edge(fn=20) {
 }
 
 
-module grid_edges(x=2, y=2, fn=20) {
-    translate([fillet                      , fillet                   , 0]) rotate(a=[0, 0, 180]) grid_edge(fn=fn);
-    translate([fillet                      , -fillet + y * module_size, 0]) rotate(a=[0, 0, 90 ]) grid_edge(fn=fn);
-    translate([-fillet + x * module_size   , -fillet + y * module_size, 0]) rotate(a=[0, 0, 0  ]) grid_edge(fn=fn);
-    translate([-fillet + x * module_size   , fillet                   , 0]) rotate(a=[0, 0, 270]) grid_edge(fn=fn);
+module grid_corners(x=2, y=2, fn=20) {
+    x = x * module_size;
+    y = y * module_size;
+    offset = fillet;
+    translate([ offset     ,  offset    , 0]) rotate(a=[0, 0, 180]) grid_corner(fn=fn);
+    translate([ offset     , -offset + y, 0]) rotate(a=[0, 0, 90 ]) grid_corner(fn=fn);
+    translate([-offset + x , -offset + y, 0]) rotate(a=[0, 0, 0  ]) grid_corner(fn=fn);
+    translate([-offset + x ,  offset    , 0]) rotate(a=[0, 0, 270]) grid_corner(fn=fn);
+}
+
+
+module grid_bottom_mold(x=1, y=1, fn=20) {
+    union() {
+        translate([0, 0, -1]) grid_trim(x=x, y=y, z=grid_height + 1);
+        grid_corners(x=x, y=y, fn=fn);
+        grid(x=x, y=y, fn=fn);
+        translate([0, 0, -1]) cube([x * module_size, y * module_size, 1]);
+    }
+}
+
+
+module grid_bottom_mold_edge(x=1, y=1, fn=20) {
+    x_size = x * module_size;
+    y_size = y * module_size;
+    union() {
+        translate([0, 0, -1]) grid_trim(x=x, y=y, z=grid_height + 1);
+        grid_corners(x=x, y=y, fn=fn);
+        grid_bar_x(x);
+        translate([0, y_size, 0]) grid_bar_x(x);
+        grid_bar_y(y);
+        translate([x_size, 0, 0]) grid_bar_y(y);
+        translate([0, 0, -1]) cube([x * module_size, y * module_size, 1]);
+    }
+}
+
+
+module grid_top_mold(x=1, y=1, z=0, fn=20) {
+    x_size = x * module_size;
+    y_size = y * module_size;
+    offset = grid_height + 1;
+    translate([0, 0, z - grid_height / 3 * 2])
+        difference() {
+            union() {
+                translate([-offset, -offset, grid_height]) cube([x_size + offset * 2, y_size + offset * 2, offset]);
+                cube_fillet(x=x_size, y=y_size, z=grid_height, side_radius=fillet);
+            }
+            grid_bottom_mold_edge(x=x, y=y, fn=fn);
+        }
 }
 
 
 module grid(x=1, y=1, fn=20) {
     difference() {
         raw_grid(x=x, y=y);
-        grid_trim(x=x, y=y);
+        translate([0, 0, -1]) grid_trim(x=x, y=y, z=grid_height + 2);
     }
 }
 
 
-// grid_edges(x=x, y=y);
+
+// grid_top_mold(x=x, y=y);
 
 grid(x=x, y=y);
