@@ -12,13 +12,16 @@ side = 1;
 $fn=20;
 
 
-module box(x=1, y=1) {
+module box(x=1, y=1, fn=20) {
     difference() {
         union() {
             raw_box(x=x * module_size, y=y * module_size, z=module_height, bottom=box_bottom, side=side, fillet=fillet);
-            groove(x=x, y=y, fn=$fn);
+            groove(x=x, y=y, fn=fn);
         }
-        grid(x=x, y=y);
+        union() {
+            grid(x=x, y=y);
+            grid_edges(x=x, y=y, fn=fn);
+        }
     }
 }
 
@@ -60,4 +63,4 @@ module cube_fillet(x, y, z, side_radius=0, bottom_radius=0, top_radius=0, center
     };
 }
 
-box(x=x, y=y);
+box(x=x, y=y, fn=$fn);
