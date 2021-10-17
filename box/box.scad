@@ -7,16 +7,13 @@ x = 2;
 y = 2;
 z = 10;
 
-/* [Hidden] */
-side = 1;
-
 $fn=20;
 
 
 module box(x=1, y=1, z=40, fn=20) {
     difference() {
         union() {
-            raw_box(x=x * module_size, y=y * module_size, z=z, bottom=box_bottom, side=side, fillet=fillet);
+            raw_box(x=x * module_size, y=y * module_size, z=z, bottom=box_bottom, side=box_side, fillet=fillet);
             groove(x=x, y=y, fn=fn);
         }
         grid_bottom_mold(x=x, y=y, fn=fn);
