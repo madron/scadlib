@@ -11,7 +11,7 @@ bottom_r = 2;
 $fn=20;
 
 
-module groove_shape(fn=20) {
+module groove_shape() {
     height = grid_height;
     thickness = box_bottom;
     offset = thickness * sqrt(2) - thickness;
@@ -32,47 +32,48 @@ module groove_shape(fn=20) {
             [ -height                           , 0                                         , 0],
             [ 0                                 , -height                                   , 0], // End (center of groove)
     ];
-    polygon(polyRound(radii_points, fn=fn));
+    polygon(polyRound(radii_points, fn=$fn));
 }
+// groove_shape();
 
 
-module groove_bar_vertical(height=1, fn=20) {
+module groove_bar_vertical(height=1) {
     linear_extrude(height=height) {
-        groove_shape(fn=fn);
+        groove_shape();
     }
 }
 
 
-module groove_bar_x(lenght=1, fn=20) {
+module groove_bar_x(lenght=1) {
     rotate(a=[270, 0, 270]) {
         translate([0, 0, side_tolerance]) {
-            groove_bar_vertical(height=lenght * module_size - 2 * side_tolerance, fn=fn);
+            groove_bar_vertical(height=lenght * module_size - 2 * side_tolerance);
         }
     }
 }
 
 
-module groove_bar_y(lenght=1, fn=20) {
+module groove_bar_y(lenght=1) {
     rotate(a=[270, 0, 0]) {
         translate([0, 0, side_tolerance]) {
-            groove_bar_vertical(height=lenght * module_size - 2 * side_tolerance, fn=fn);
+            groove_bar_vertical(height=lenght * module_size - 2 * side_tolerance);
         }
     }
 }
 
 
-module groove(x=1, y=1, fn=20) {
+module groove(x=1, y=1) {
     if (x > 1) {
         for (i = [1:x-1]) {
             translate([i * module_size, 0, 0]) {
-                groove_bar_y(y, fn=fn);
+                groove_bar_y(y);
             }
         }
     }
     if (y > 1) {
         for (i = [1:y-1]) {
             translate([0, i * module_size, 0]) {
-                groove_bar_x(x, fn=fn);
+                groove_bar_x(x);
             }
         }
     }
