@@ -48,10 +48,10 @@ module box_sides(x=2, y=2, z=40) {
     base_x = x * module_size;
     base_y = y * module_size;
     offset = fillet - 0.01;
-    translate([0                , base_x - offset   , 0]) rotate(a=[90, 0, 0  ]) box_side_bar(l=y, z=z);
-    translate([fillet           , 0                 , 0]) rotate(a=[90, 0, 90 ]) box_side_bar(l=x, z=z);
-    translate([base_y           , offset            , 0]) rotate(a=[90, 0, 180]) box_side_bar(l=y, z=z);
-    translate([base_y - offset  , base_x            , 0]) rotate(a=[90, 0, 270]) box_side_bar(l=x, z=z);
+    translate([0                , base_y - offset   , 0]) rotate(a=[90, 0, 0  ]) box_side_bar(l=y, z=z);
+    translate([offset           , 0                 , 0]) rotate(a=[90, 0, 90 ]) box_side_bar(l=x, z=z);
+    translate([base_x           , offset            , 0]) rotate(a=[90, 0, 180]) box_side_bar(l=y, z=z);
+    translate([base_x - offset  , base_y            , 0]) rotate(a=[90, 0, 270]) box_side_bar(l=x, z=z);
 }
 // box_sides(x=x, y=y, z=z);
 
