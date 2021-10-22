@@ -44,9 +44,10 @@ module grid_bar_y(lenght=1) {
 }
 
 
-module grid_trim(x=1, y=1, z=grid_height) {
+module grid_trim(x=1, y=1) {
     x = x * module_size;
     y = y * module_size;
+    z = grid_height;
     size = grid_height + 1;
     translate([0, 0, 0]) {
         difference() {
@@ -59,6 +60,7 @@ module grid_trim(x=1, y=1, z=grid_height) {
         }
     }
 }
+// grid_trim(x=x, y=y);
 
 
 module raw_grid(x=1, y=1) {
@@ -75,12 +77,29 @@ module raw_grid(x=1, y=1) {
         }
     }
 }
+// raw_grid(x=x, y=y);
+
+
+module bottom_mold(x=1, y=1) {
+    size_x = x * module_size;
+    size_y = y * module_size;
+    size = grid_height + 1;
+    union() {
+        translate([-size, -size, -size]) {
+            cube([size_x + size * 2, size_y + size * 2, size]);
+        }
+        raw_grid(x=x, y=y);
+        grid_trim(x=x, y=y);
+    }
+}
+// bottom_mold(x=x, y=y);
+
 
 
 module grid(x=1, y=1) {
     difference() {
         raw_grid(x=x, y=y);
-        translate([0, 0, -1]) grid_trim(x=x, y=y, z=grid_height + 2);
+        translate([0, 0, -1]) grid_trim(x=x, y=y);
     }
 }
 
