@@ -1,6 +1,6 @@
 module_size = 50;
-fillet = 6;
-grid_height = 3;
+fillet = 8;
+grid_height = 5;
 side_tolerance = 0.05;
 
 box_bottom = 1;

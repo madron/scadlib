@@ -14,6 +14,7 @@ module grid_shape() {
         ]
     );
 }
+// grid_shape();
 
 
 module edge_shape() {
@@ -26,6 +27,7 @@ module edge_shape() {
         ]
     );
 }
+// edge_shape();
 
 
 module grid_bar_x(lenght=1) {
@@ -83,4 +85,4 @@ module grid(x=1, y=1) {
 }
 
 
-grid(x=x, y=y);
+// grid(x=x, y=y);
