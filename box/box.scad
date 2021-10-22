@@ -56,6 +56,40 @@ module box_sides(x=2, y=2, z=40) {
 // box_sides(x=x, y=y, z=z);
 
 
+module box_sides_mold(x=2, y=2, z=40) {
+    base_x = x * module_size;
+    base_y = y * module_size;
+    offset = fillet - 0.01;
+    internal_offset = max(fillet, grid_height);
+    external_offset = 5;
+    vertical_offset = -1;
+    cube_h = z + vertical_offset + 2;
+    difference() {
+        difference() {
+            translate([-external_offset, -external_offset , 0.5]) cube([base_x + external_offset * 2, base_x + external_offset * 2, z + vertical_offset + 0.5]);
+            translate([internal_offset, internal_offset, -1]) cube([base_x - internal_offset * 2, base_x - internal_offset * 2, z + vertical_offset + 3]);
+        }
+        for(slide_x = [0: box_side / 2 : internal_offset]) {
+            translate([slide_x, 0, 0])
+                translate([0                , base_y - offset   , 0]) rotate(a=[90, 0, 0  ]) box_side_bar(l=y, z=z);
+            translate([-slide_x, 0, 0])
+                translate([base_x           , offset            , 0]) rotate(a=[90, 0, 180]) box_side_bar(l=y, z=z);
+        }
+        for(slide_y = [0: box_side / 2 : internal_offset]) {
+            translate([0, slide_y, 0])
+                translate([offset           , 0                 , 0]) rotate(a=[90, 0, 90 ]) box_side_bar(l=x, z=z);
+            translate([0, -slide_y, 0])
+                translate([base_x - offset  , base_y            , 0]) rotate(a=[90, 0, 270]) box_side_bar(l=x, z=z);
+        }
+        translate([0     , 0     , cube_h / 2]) cube([module_size, module_size, cube_h], center = true);
+        translate([base_x, 0     , cube_h / 2]) cube([module_size, module_size, cube_h], center = true);
+        translate([0     , base_y, cube_h / 2]) cube([module_size, module_size, cube_h], center = true);
+        translate([base_x, base_y, cube_h / 2]) cube([module_size, module_size, cube_h], center = true);
+    }
+}
+// box_sides_mold(x=x, y=y, z=z);
+
+
 module box_corner(z=40) {
     rotate_extrude(angle=90, convexity=10, $fn=$fn*2) {
         translate([fillet, 0, 0]) {
@@ -90,40 +124,19 @@ module raw_box(x=2, y=2, z=40) {
 // raw_box(x=x, y=y, z=z);
 
 
-module raw_box_bottom_mold(x=2, y=2, z=40) {
-    base_x = x * module_size;
-    base_y = y * module_size;
-    h2 = grid_height + box_bottom * sqrt(2);
-    h1 = grid_height;
-    offset2 = grid_height - box_side;
-    offset1 = grid_height;
-    difference() {
-        difference() {
-            translate([-1, -1, 0]) cube([base_x + 2, base_y + 2, h2 + 1]);
-            union() {
-                translate([offset2, offset2, h1 -1]) cube([base_x - offset2 * 2, base_y - offset2 * 2, h2 + 3]);
-                translate([offset1, offset1,    -1]) cube([base_x - offset1 * 2, base_y - offset1 * 2, h1 + 4]);
-            }
-        }
-        raw_box(x=x, y=y, z=z);
-    }
-}
-// raw_box_bottom_mold(x=x, y=y, z=z);
-
-
 module box(x=1, y=1, z=40) {
     difference() {
         union() {
             raw_box(x=x, y=y, z=z);
             groove(x=x, y=y);
         }
-        grid(x=x, y=y);
-        raw_box_bottom_mold(x=x, y=y, z=z);
+        box_sides_mold(x=x, y=y, z=z);
+        bottom_mold(x=x, y=y);
     }
 }
 // difference() {
 //     box(x=x, y=y, z=z);
-//     translate([60,0,-10]) cube([120, 120, 70]);
+//     translate([50,0,-10]) cube([120, 120, 70]);
 // }
 
 box(x=x, y=y, z=z);
