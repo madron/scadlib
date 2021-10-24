@@ -139,4 +139,14 @@ module box(x=1, y=1, z=40) {
 //     translate([50,0,-10]) cube([120, 120, 70]);
 // }
 
+// Check if boxes are stackable
+// intersection() {
+//     translate([0  , 0  , 0]) box(x=x, y=y, z=z);
+//     translate([100, 0  , 0]) box(x=x, y=y, z=z);
+//     translate([100, 100, 0]) box(x=x, y=y, z=z);
+//     translate([0  , 100, 0]) box(x=x, y=y, z=z);
+//     translate([50 , 50 , 40]) box(x=x, y=y, z=z);
+// }
+
+
 box(x=x, y=y, z=z);
