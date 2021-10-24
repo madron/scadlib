@@ -3,5 +3,8 @@ fillet = 8;
 grid_height = 5;
 side_tolerance = 0.05;
 
-box_bottom = 1;
-box_side = 1;
+box_bottom = 2;
+box_side = 2;
+groove_height = 2;
+groove_chamfer = 2;
+groove_tolerance = 0.1;
