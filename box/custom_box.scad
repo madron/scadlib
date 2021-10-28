@@ -73,4 +73,9 @@ module custom_box(x=100, y=100, z=40) {
         box_label(x=x, y=y, z=z);
     }
 }
+// difference() {
+//     custom_box(x=x, y=y, z=z);
+//     translate([x/2, -5, -5]) cube([x, y+10, z+10]);
+// }
+
 custom_box(x=x, y=y, z=z);
