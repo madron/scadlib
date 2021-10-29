@@ -61,13 +61,13 @@ module raw_box_external(x=100, y=100, z=40) {
 // raw_box_external(x=x, y=y, z=z);
 
 
-module raw_box_internal(x=100, y=100, z=40) {
+module raw_box_internal(x=100, y=100, z=40, bottom=box_bottom) {
     // Internal sizes
     ix = x - box_side * 2;
     iy = y - box_side * 2;
     iz = z;
     ir = fillet;
-    translate([box_side, box_side, box_bottom]) cube_fillet(ix, iy, iz, side_radius=ir, bottom_radius=ir, top_radius=0);
+    translate([box_side, box_side, bottom]) cube_fillet(ix, iy, iz, side_radius=ir, bottom_radius=ir, top_radius=0);
 }
 // raw_box_internal(x=x, y=y, z=z);
 
