@@ -24,26 +24,6 @@ module box_label(x=100, y=100, z=40) {
 // box_label(x=80, y=100, z=40);
 
 
-module raw_box(x=100, y=100, z=40) {
-    // External sizes
-    ex = x;
-    ey = y;
-    ez = z;
-    er = fillet + box_side;
-    // Internal sizes
-    ix = ex - box_side * 2;
-    iy = ey - box_side * 2;
-    iz = ez;
-    ir = fillet;
-    // Box
-    difference() {
-        cube_fillet(ex, ey, ez, side_radius=er, bottom_radius=0, top_radius=0);
-        translate([box_side, box_side, box_bottom]) cube_fillet(ix, iy, iz, side_radius=ir, bottom_radius=ir, top_radius=0);
-    }
-}
-// raw_box(x=x, y=y, z=z);
-
-
 module bottom_mold(x=100, y=100) {
     // External sizes
     eo = 1;
@@ -66,11 +46,36 @@ module bottom_mold(x=100, y=100) {
 // bottom_mold(x=x, y=y);
 
 
-module custom_box(x=100, y=100, z=40) {
+module raw_box_external(x=100, y=100, z=40) {
+    // External sizes
+    ex = x;
+    ey = y;
+    ez = z;
+    er = fillet + box_side;
     difference() {
-        raw_box(x=x, y=y, z=z);
+        cube_fillet(ex, ey, ez, side_radius=er, bottom_radius=0, top_radius=0);
         bottom_mold(x=x, y=y);
         box_label(x=x, y=y, z=z);
+    }
+}
+// raw_box_external(x=x, y=y, z=z);
+
+
+module raw_box_internal(x=100, y=100, z=40) {
+    // Internal sizes
+    ix = x - box_side * 2;
+    iy = y - box_side * 2;
+    iz = z;
+    ir = fillet;
+    translate([box_side, box_side, box_bottom]) cube_fillet(ix, iy, iz, side_radius=ir, bottom_radius=ir, top_radius=0);
+}
+// raw_box_internal(x=x, y=y, z=z);
+
+
+module custom_box(x=100, y=100, z=40) {
+    difference() {
+        raw_box_external(x=x, y=y, z=z);
+        raw_box_internal(x=x, y=y, z=z);
     }
 }
 // difference() {
