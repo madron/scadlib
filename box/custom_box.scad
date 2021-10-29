@@ -24,6 +24,20 @@ module box_label(x=100, y=100, z=40) {
 // box_label(x=80, y=100, z=40);
 
 
+module top_mold(x=100, y=100, z=40) {
+    // Internal sizes
+    io = box_side + groove_tolerance;
+    ix = x - io * 2;
+    iy = y - io * 2;
+    iz = groove_height + 1;
+    ir = fillet;
+    // Box
+    translate([0, 0, z - groove_height])
+        translate([io, io, 0]) cube_fillet(ix, iy, iz, side_radius=ir, bottom_radius=0, top_radius=0);
+}
+// top_mold(x=x, y=y, z=z);
+
+
 module bottom_mold(x=100, y=100) {
     // External sizes
     eo = 1;
