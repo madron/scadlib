@@ -36,12 +36,12 @@ module raw_drill_bit(d=3, l=60, r1=0) {
     diameter = d + bit_diameter_tolerance;
     l = l + d/2;
     radii_points = [
-        [-d / 2, 0, 0],
-        [-d / 2, l, d/2],
-        [ d / 2, l, d/2],
-        [ d / 2, 0, 0],
+        [-diameter / 2, 0, 0],
+        [-diameter / 2, l, diameter/2],
+        [ diameter / 2, l, diameter/2],
+        [ diameter / 2, 0, 0],
     ];
-    translate([0, 0, -d]) polyRoundExtrude(radii_points, diameter, r1=r1, r2=d/2.1, fn=$fn);
+    translate([0, 0, -d]) polyRoundExtrude(radii_points, d, r1=r1, r2=d/2.1, fn=$fn);
 }
 // raw_drill_bit(d=4, l=60, r1=-1);
 
