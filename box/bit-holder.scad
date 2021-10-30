@@ -14,8 +14,9 @@ z = 20;
 storage_x = 100;
 space = 5;
 bit_y = 15;
-label_y = 6;
+label_y = 5;
 bit_diameter_tolerance = 0.1;
+bit_fillet = 1;
 
 /* [Hidden] */
 $fn = 10;
@@ -30,21 +31,22 @@ function bits_size_x(a=[], space=0) = bit_offset(a, len(a) - 1, space=space) + a
 
 
 
-module raw_drill_bit(d=3, l=60) {
-    d = d + bit_diameter_tolerance;
+module raw_drill_bit(d=3, l=60, r1=0) {
+    diameter = d + bit_diameter_tolerance;
+    l = l + d/2;
     radii_points = [
         [-d / 2, 0, 0],
         [-d / 2, l, d/2],
         [ d / 2, l, d/2],
         [ d / 2, 0, 0],
     ];
-    translate([0, 0, -d]) polyRoundExtrude(radii_points, d + 1, r1=0, r2=d/2.1, fn=$fn);
+    translate([0, 0, -d]) polyRoundExtrude(radii_points, diameter, r1=r1, r2=d/2.1, fn=$fn);
 }
-// drill_bit(d=4, l=60);
+// raw_drill_bit(d=4, l=60, r1=-1);
 
 
 module drill_bit(d=3, l=60) {
-    raw_drill_bit(d=d, l=l);
+    raw_drill_bit(d=d, l=l, r1=-bit_fillet);
     translate([0, 0, -d*2/3])
         rotate([15, 0, 0]) raw_drill_bit(d=d, l=l);
 }
@@ -79,29 +81,14 @@ module labels(diameters=[3, 4], space=1) {
 // labels(diameters=diameters, space=space);
 
 
-module storage_shape(diameters=[3, 4], x=1, y=3) {
-}
-// labels(diameters=diameters, space=space);
-
 module storage_space(diameters=[3, 4], x=1, y=3, z=20) {
     x_size = x * module_size;
     y_size = y * module_size;
-    x_offset = (diameters[0] + bit_diameter_tolerance) / 2;
-    // bit_x = bits_size_x(a=diameters, space=space);
-    // bit_x_l = (x_size - bit_x) / 2;
-    bit_x = bits_size_x(a=diameters, space=space);
-    bit_x_l = (x_size - bit_x) / 2;
-
     left_x = box_side;
     left_y_top = y_size - box_side - side_tolerance * 2;
     left_y_bottom = bit_y + min;
-    // right_x = bits_size_x(a=diameters, space=space);
     right_x = storage_x;
-    // right_y_top = y_size - box_side - side_tolerance * 2;
-    // right_y_bottom = bit_y + max;
-
     radii_points = [
-        // [bit_x_l,   left_y_bottom,   fillet],
         [left_x,    left_y_bottom,   fillet],
         [left_x,    left_y_top,      fillet],
         [right_x,   left_y_top,     fillet],
