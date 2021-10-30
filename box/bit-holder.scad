@@ -5,13 +5,13 @@ use <custom_box.scad>
 /* [Bits] */
 diameters = [3, 4, 5, 6, 7, 8, 9, 10];
 min = 65;
-max = 140;
+max = 150;
 /* [Modules] */
 x = 2;
 y = 3;
 z = 20;
 /* [Spacing] */
-storage_x = 71;
+storage_x = 63;
 space = 5;
 bit_y = 15;
 label_y = 5;
@@ -56,14 +56,13 @@ module drill_bit(d=3, l=60) {
 
 module drill_bits(diameters=[3, 4], x=1, y=3, min=60, max=80, space=1) {
     max_length = y * module_size - bit_y - box_side * 2 - max(diameters) / 2 ;
-    echo(max_length);
     x_offset = (diameters[0] + bit_diameter_tolerance) / 2;
     translate([x_offset, 0, 0])
         for (i = [ 0 : len(diameters) - 1 ] ) {
             d = diameters[i];
             offset = bit_offset(diameters, i, space=space);
             l = min(bit_length(diameters, i, space), max_length);
-            echo(l);
+            echo(d, l);
             translate([offset, 0, 0]) drill_bit(d=d, l=l);
         }
 }
