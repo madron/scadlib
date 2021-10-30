@@ -26,7 +26,7 @@ module box_label(x=100, y=100, z=40) {
 
 module top_mold(x=100, y=100, z=40) {
     // Internal sizes
-    io = box_side + groove_tolerance;
+    io = box_side;
     ix = x - io * 2;
     iy = y - io * 2;
     iz = groove_height + 1;
