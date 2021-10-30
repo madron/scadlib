@@ -4,23 +4,24 @@ use <custom_box.scad>
 
 /* [Bits] */
 diameters = [3, 4, 5, 6, 7, 8, 9, 10];
-min = 60;
-max = 120;
+min = 65;
+max = 140;
 /* [Modules] */
 x = 2;
 y = 3;
 z = 20;
 /* [Spacing] */
-storage_x = 100;
+storage_x = 71;
 space = 5;
 bit_y = 15;
 label_y = 5;
-bit_diameter_tolerance = 0.1;
-bit_fillet = 1;
+bit_diameter_tolerance = 0.5;
+bit_fillet = 0;
 
 /* [Hidden] */
 $fn = 10;
 label_depth = 1;
+bit_groove_angle = 15;
 
 
 function bit_offset(a=[], i=0, space=0) = (i==0) ? 0 : a[i] / 2 + a[i-1] / 2 + bit_offset(a, i-1, space=space) + space;
@@ -48,18 +49,21 @@ module raw_drill_bit(d=3, l=60, r1=0) {
 module drill_bit(d=3, l=60) {
     raw_drill_bit(d=d, l=l, r1=-bit_fillet);
     translate([0, 0, -d*2/3])
-        rotate([15, 0, 0]) raw_drill_bit(d=d, l=l);
+        rotate([bit_groove_angle, 0, 0]) raw_drill_bit(d=d, l=l);
 }
 // drill_bit(d=4, l=60);
 
 
-module drill_bits(diameters=[3, 4], min=60, max=80, space=1) {
+module drill_bits(diameters=[3, 4], x=1, y=3, min=60, max=80, space=1) {
+    max_length = y * module_size - bit_y - box_side * 2 - max(diameters) / 2 ;
+    echo(max_length);
     x_offset = (diameters[0] + bit_diameter_tolerance) / 2;
     translate([x_offset, 0, 0])
         for (i = [ 0 : len(diameters) - 1 ] ) {
             d = diameters[i];
             offset = bit_offset(diameters, i, space=space);
-            l = bit_length(diameters, i, space);
+            l = min(bit_length(diameters, i, space), max_length);
+            echo(l);
             translate([offset, 0, 0]) drill_bit(d=d, l=l);
         }
 }
@@ -85,7 +89,7 @@ module storage_space(diameters=[3, 4], x=1, y=3, z=20) {
     x_size = x * module_size;
     y_size = y * module_size;
     left_x = box_side;
-    left_y_top = y_size - box_side - side_tolerance * 2;
+    left_y_top = y_size - box_side;
     left_y_bottom = bit_y + min;
     right_x = storage_x;
     radii_points = [
@@ -97,6 +101,50 @@ module storage_space(diameters=[3, 4], x=1, y=3, z=20) {
         polyRoundExtrude(radii_points, z, r1=0, r2=fillet, fn=$fn);
 }
 // storage_space(diameters=diameters, x=x, y=y, z=z);
+
+
+function finger_space_top_points() = [
+    [box_side,                      0,          0],
+    [box_side,                      min / 5,    0],
+    [x * module_size - box_side,    max / 5,    0],
+    [x * module_size - box_side,    0,          0],
+];
+
+
+module finger_space_side_mold() {
+    radii_points = [
+        [box_side,                      0,      0],
+        [box_side,                      max,    0],
+        [x * module_size - box_side,    max,    0],
+        [x * module_size - box_side,    0,      0],
+    ];
+    difference() {
+        translate([-50, -50, -40]) cube([200, 200, 80]);
+        translate([0, 0, -50]) polyRoundExtrude(radii_points, 100, r1=0, r2=0, fn=$fn);
+    }
+}
+// finger_space_side_mold();
+
+
+module finger_space_raw(diameters=[3, 4], x=3, y=3, z=20) {
+    x_size = x * module_size;
+    y_offset = min / 5;
+    x_angle = bit_groove_angle;
+    y_angle = atan2(max(diameters) - min(diameters), x_size);
+    translate([0, y_offset, 0]) rotate([x_angle, y_angle, 0]) translate([0, -y_offset, 0]) scale([1, 2, 1]) polyRoundExtrude(finger_space_top_points(), z, r1=0, r2=0, fn=$fn);
+}
+// finger_space_raw(diameters=diameters, x=x, y=y, z=z);
+
+
+module finger_space(diameters=[3, 4], x=3, y=3, z=20) {
+    bit_top_z = z - groove_height;
+    translate([0, bit_y, bit_top_z])
+        difference() {
+            finger_space_raw(diameters=diameters, x=x, y=y, z=z);
+            finger_space_side_mold();
+        }
+}
+// finger_space(diameters=diameters, x=x, y=y, z=z);
 
 
 module base_box(diameters=[3, 4], x=1, y=3, z=20) {
@@ -111,6 +159,7 @@ module base_box(diameters=[3, 4], x=1, y=3, z=20) {
         translate([bit_x_l, bit_y, bit_bottom_z]) drill_bits(diameters=diameters, min=min, max=max, space=space);
         translate([bit_x_l, label_y, bit_bottom_z]) labels(diameters=diameters, space=space);
         storage_space(diameters=diameters, x=x, y=y, z=z);
+        finger_space(diameters=diameters, x=x, y=y, z=z);
     }
 }
 difference() {
