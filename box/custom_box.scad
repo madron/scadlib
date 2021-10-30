@@ -14,7 +14,7 @@ module box_label(x=100, y=100, z=40) {
     translate([0, 0, -label_depth])
         linear_extrude(label_depth * 2)
             translate([x/2, y/2, 0])
-                rotate([0, 180, 180])
+                rotate([0, 180, 0])
                     if (x > 90) {
                         text(str(x, "x", y, "x", z), size=10, halign="center", valign="center");
                     } else {
