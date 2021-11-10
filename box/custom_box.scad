@@ -4,6 +4,8 @@ use <common.scad>
 x = 50;
 y = 50;
 z = 20;
+part_1 = false;
+part_2 = false;
 
 /* [Hidden] */
 label_depth = 0.2;
@@ -98,3 +100,44 @@ module custom_box(x=100, y=100, z=40) {
 // }
 
 custom_box(x=x, y=y, z=z);
+
+
+module split_groove(x=100, y=100, z=40) {
+    translate([x/2, 0, fillet])
+        difference() {
+            cylinder(d=box_side, h=z, $fn=4);
+            translate([-box_side/2, 0, 0]) rotate([0, 45, 0]) cube([box_side, box_side, box_side], center=true);
+        }
+}
+// split_groove(x=100, y=100, z=40);
+
+
+module custom_box_part_1(x=100, y=100, z=40) {
+    difference() {
+        custom_box(x=x, y=y, z=z);
+        translate([x/2, -5, -5]) cube([x+10, y+10, z+10]);
+        translate([0, box_side/2, 0]) split_groove(x=x, y=y, z=z);
+        translate([0, y - box_side/2, 0]) split_groove(x=x, y=y, z=z);
+    }
+}
+// custom_box_part_1(x=100, y=100, z=40);
+
+
+module custom_box_part_2(x=100, y=100, z=40) {
+    difference() {
+        custom_box(x=x, y=y, z=z);
+        custom_box_part_1(x=x, y=y, z=z);
+    }
+}
+// custom_box_part_2(x=100, y=100, z=40);
+
+
+if (part_1) {
+    custom_box_part_1(x=x, y=y, z=z);
+}
+else if (part_2) {
+    custom_box_part_2(x=x, y=y, z=z);
+}
+else {
+    custom_box(x=x, y=y, z=z);
+}
