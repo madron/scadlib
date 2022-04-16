@@ -6,6 +6,7 @@ syntax: glob
 **/bom
 **/dxfs
 **/stls
+**/tmp
 **/openscad.echo
 **/openscad.log
 **/printme.html
