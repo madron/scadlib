@@ -1,0 +1,13 @@
+# use glob syntax.
+syntax: glob
+
+# NopSCADlib
+**/assemblies
+**/bom
+**/dxfs
+**/stls
+**/openscad.echo
+**/openscad.log
+**/printme.html
+**/readme.html
+**/readme.md
